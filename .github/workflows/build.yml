@@ -1,0 +1,42 @@
+name: build
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    tags-ignore:
+      - v*
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Post to Slack
+      uses: tegud/tegud-slack-action@5aa91de
+      with:
+        event: build-start
+        environment: Dev
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        JOB_CONTEXT: ${{ toJson(job) }}
+    - uses: actions/checkout@v1
+    - name: Use Node.js 12.13.0
+      uses: actions/setup-node@v1
+      with:
+        node-version: 12.13.0
+    - name: install & test
+      run: npm cit
+    - name: build
+      run: npm run build
+    - name: Post to Slack
+      uses: tegud/tegud-slack-action@5aa91de
+      if: always()  
+      with:
+        event: build-complete
+        environment: Dev
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        JOB_CONTEXT: ${{ toJson(job) }}
