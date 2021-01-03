@@ -1,12 +1,9 @@
 import { Meal, MealOption } from './entities/meal';
 import { MealAllocationForDay, MealAllocation } from './entities/meal-allocation';
 import { AllocationRule, DayAllocationRule } from './entities/allocation-rule';
+import { pickMeal } from './pick-meal';
 
 const UNASSIGNED_MEAL = new Meal({ name: 'unassigned' });
-
-const pickMeal = (previousMeals: MealAllocation[], mealOptions: MealOption[]) => {
-  return mealOptions[0];
-};
 
 const getMeals = (mealOptions: MealOption[] = [], allocationRules: AllocationRule[] = []) : MealAllocation[] => {
   return new Array(7).fill(undefined).map((x, i) => {
