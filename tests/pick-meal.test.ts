@@ -1,13 +1,11 @@
 import { pickMeal } from '../lib/pick-meal';
 import { Meal } from '../lib/entities/meal';
 import { MealAllocationForDay } from '../lib/entities/meal-allocation';
+import { DayOfWeek } from '../lib/entities/day-of-week';
 
 describe('pickMeal', () => {
-  let randomNumber: number;
-
   beforeEach(() => {
-    randomNumber = 0;
-    jest.spyOn(global.Math, 'random').mockReturnValue(0.52);
+    jest.spyOn(global.Math, 'random').mockReturnValue(0);
   });
 
   afterAll(() => {
@@ -24,19 +22,36 @@ describe('pickMeal', () => {
   });
   
   it('returns random meal option if more than one available and no historic meals', () => {
+    jest.spyOn(global.Math, 'random').mockReturnValue(0.5);
+
     const burgers = new Meal({ name: 'Burgers' });
     const hotdogs = new Meal({ name: 'Hotdogs' });
-    randomNumber = 1;
 
     expect(pickMeal([], [burgers, hotdogs])).toEqual(hotdogs);
   });
   
-  // it('returns random meal option if more than one available and no historic meals', () => {
-  //   const burgers = new Meal({ name: 'Burgers' });
-  //   const hotdogs = new Meal({ name: 'Hotdogs' });
+  it('returns other option if two meals and historic meals contains one item', () => {
+    jest.spyOn(global.Math, 'random').mockReturnValue(0.5);
 
-  //   const lastAllocatedMeal = new MealAllocationForDay({ meal: hotdogs })
+    const burgers = new Meal({ name: 'Burgers' });
+    const hotdogs = new Meal({ name: 'Hotdogs' });
 
-  //   expect(pickMeal([], [burgers, hotdogs])).toEqual(burgers);
-  // });
+    const lastAllocatedMeal = new MealAllocationForDay({ day: DayOfWeek.Sunday, meal: hotdogs })
+
+    expect(pickMeal([lastAllocatedMeal], [burgers, hotdogs])).toEqual(burgers);
+  });
+  
+  it('returns the least recently used if historic meals contains both items', () => {
+    jest.spyOn(global.Math, 'random').mockReturnValue(0.5);
+
+    const burgers = new Meal({ name: 'Burgers' });
+    const hotdogs = new Meal({ name: 'Hotdogs' });
+
+    const previousMeals = [
+      new MealAllocationForDay({ day: DayOfWeek.Sunday, meal: burgers }),
+      new MealAllocationForDay({ day: DayOfWeek.Sunday, meal: hotdogs }),
+    ];
+
+    expect(pickMeal(previousMeals, [burgers, hotdogs])).toEqual(burgers);
+  });
 });

@@ -16,7 +16,13 @@ const pickMeal = (previousMeals: MealAllocation[], mealOptions: MealOption[]): M
     return mealOptions[0];
   }
 
-  return mealOptions[getRandomInt(mealOptions.length)];
+  const unusedMeals = mealOptions.filter(option => !previousMeals.map(meal => meal.meal.name).includes(option.name));
+
+  if (unusedMeals.length > 0) {
+    return unusedMeals[getRandomInt(unusedMeals.length)];
+  }
+
+  return previousMeals[0].meal;
 };
 
 export { pickMeal };
