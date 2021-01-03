@@ -16,7 +16,7 @@ class DayAllocationRule implements AllocationRule {
     this.tags = tags;
   }
 
-  matches(day: DayOfWeek) {
+  matches(day: DayOfWeek): boolean {
     return this.days.filter((ruleDay: string) => {
       if (ruleDay.startsWith('!')) {
         return ruleDay.substring(1) !== DayOfWeek[day].toLowerCase();

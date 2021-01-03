@@ -12,6 +12,7 @@
     "import/prefer-default-export": "off",
     "no-shadow": "off",
     "@typescript-eslint/no-shadow": ["error"],
+    "@typescript-eslint/explicit-module-boundary-types": ["error"],
     "import/extensions": [
       "error",
       "ignorePackages",

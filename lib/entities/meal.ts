@@ -14,7 +14,7 @@ class Meal implements MealOption {
     this.tags = tags.map((tag) => tag.toLowerCase());
   }
 
-  hasRequiredTags(requiredTags: Set<string>) {
+  hasRequiredTags(requiredTags: Set<string>): boolean {
     return [...requiredTags]
       .map((tag) => tag.toLowerCase())
       .reduce((result: boolean, currentRequiredTag): boolean => {
