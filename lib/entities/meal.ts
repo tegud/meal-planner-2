@@ -11,23 +11,26 @@ class Meal implements MealOption {
 
   constructor({ name, tags = [] } : { name: string, tags?: string[] }) {
     this.name = name;
-    this.tags = tags.map(tag => tag.toLowerCase());
+    this.tags = tags.map((tag) => tag.toLowerCase());
   }
 
   hasRequiredTags(requiredTags: Set<string>): boolean {
-    return [...requiredTags].map((tag) => tag.toLowerCase()).reduce((result: boolean, currentRequiredTag): boolean => {
-      if (!result) {
-        return false;
-      }
+    return [...requiredTags]
+      .map((tag) => tag.toLowerCase())
+      .reduce((result: boolean, currentRequiredTag): boolean => {
+        if (!result) {
+          return false;
+        }
 
-      const inverseRule = currentRequiredTag.startsWith('!');
+        const inverseRule = currentRequiredTag.startsWith('!');
 
-      if ((inverseRule && this.tags.includes(currentRequiredTag.substring(1))) || (!inverseRule && !this.tags.includes(currentRequiredTag))) {
-        return false;
-      }
+        if ((inverseRule && this.tags.includes(currentRequiredTag.substring(1)))
+          || (!inverseRule && !this.tags.includes(currentRequiredTag))) {
+          return false;
+        }
 
-      return result;
-    }, true);
+        return result;
+      }, true);
   }
 }
 

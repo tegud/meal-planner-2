@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
+      "lib": ["ES2019"],
+      "module": "commonjs",
       "target": "ES2019",
-      "module": "ES2020",
       "strict": true,
-      "moduleResolution": "node",
+      "noImplicitAny": true,
       "skipLibCheck": true,
       "resolveJsonModule": true,
       "esModuleInterop": true,

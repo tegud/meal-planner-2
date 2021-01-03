@@ -55,4 +55,28 @@ describe('get meals', () => {
      });
    });
   });
+
+  describe.skip('meal rotation in a week', () => {
+    it('alternates between two meal options when only two are available', () => {
+      const burger = new Meal({ name: 'Burgers' });
+      const hotdogs = new Meal({ name: 'HotDogs' });
+      const roast = new Meal({ name: 'Roast', tags: ['sunday'] });
+
+      expect(getMeals([
+        burger,
+        roast,
+      ], [
+        new DayAllocationRule(['!sunday'], ['!sunday']),
+        new DayAllocationRule(['sunday'], ['sunday']),
+      ])).toEqual([
+        { day: 0, meal: burger },
+        { day: 1, meal: hotdogs },
+        { day: 2, meal: burger },
+        { day: 3, meal: hotdogs },
+        { day: 4, meal: burger },
+        { day: 5, meal: hotdogs },
+        { day: 6, meal: roast },
+      ]);
+    });
+  });
 });

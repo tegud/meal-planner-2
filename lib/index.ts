@@ -4,6 +4,10 @@ import { AllocationRule, DayAllocationRule } from './entities/allocation-rule';
 
 const UNASSIGNED_MEAL = new Meal({ name: 'unassigned' });
 
+const pickMeal = (previousMeals: MealAllocation[], mealOptions: MealOption[]) => {
+  return mealOptions[0];
+};
+
 const getMeals = (mealOptions: MealOption[] = [], allocationRules: AllocationRule[] = []) : MealAllocation[] => {
   return new Array(7).fill(undefined).map((x, i) => {
     const matchingAllocationRules = allocationRules.filter((rule) => rule.matches(i));
@@ -20,7 +24,7 @@ const getMeals = (mealOptions: MealOption[] = [], allocationRules: AllocationRul
       return matching;
     }, new Array<MealOption>());
 
-    const meal = matchingMeals.length > 0 ? matchingMeals[0] : UNASSIGNED_MEAL;
+    const meal = matchingMeals.length > 0 ? pickMeal([], matchingMeals) : UNASSIGNED_MEAL;
 
     return new MealAllocationForDay({ day: i, meal });
   });

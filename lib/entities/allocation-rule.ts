@@ -7,9 +7,9 @@ interface AllocationRule {
 }
 
 class DayAllocationRule implements AllocationRule {
-  days: string[];
+  private days: string[];
 
-  tags: string[];
+  private tags: string[];
 
   constructor(days: string[], tags: string[]) {
     this.days = days.map((day) => day.toLowerCase());
