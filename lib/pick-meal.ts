@@ -7,6 +7,16 @@ const getRandomInt = (max: number): number => {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
+class ScoredMeal extends Meal {
+  score: number;
+
+  constructor(meal: Meal, score: number) {
+    super(meal);
+
+    this.score = score;
+  }
+}
+
 const pickMeal = (previousMeals: MealAllocation[], mealOptions: MealOption[]): MealOption => {
   if (mealOptions.length < 1) {
     return UNASSIGNED_MEAL;
@@ -16,10 +26,25 @@ const pickMeal = (previousMeals: MealAllocation[], mealOptions: MealOption[]): M
     return mealOptions[0];
   }
 
-  const unusedMeals = mealOptions.filter(option => !previousMeals.map(meal => meal.meal.name).includes(option.name));
+  const scoredMeals = mealOptions.map(option => {
+    const isUnused = !previousMeals.map(meal => meal.meal.name).includes(option.name);
+    const proximityScore = isUnused ? 100 : 0;
 
-  if (unusedMeals.length > 0) {
-    return unusedMeals[getRandomInt(unusedMeals.length)];
+    return new ScoredMeal(option, proximityScore);
+  });
+
+  const topScore = scoredMeals.reduce((max, current): number => {
+    if (current.score > max) {
+      return current.score;
+    }
+
+    return max;
+  }, 0);
+
+  const optionsMatchingTopScore = scoredMeals.filter((current) => current.score === topScore);
+
+  if (optionsMatchingTopScore.length > 0) {
+    return optionsMatchingTopScore[getRandomInt(optionsMatchingTopScore.length)];
   }
 
   return previousMeals[0].meal;
