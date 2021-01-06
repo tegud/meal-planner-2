@@ -15,6 +15,10 @@ class ScoredMeal extends Meal {
 
     this.score = score;
   }
+
+  toMealOption() {
+    return new Meal({ name: this.name, tags: this.tags });
+  }
 }
 
 const pickMeal = (previousMeals: MealAllocation[], mealOptions: MealOption[]): MealOption => {
@@ -44,7 +48,7 @@ const pickMeal = (previousMeals: MealAllocation[], mealOptions: MealOption[]): M
   const optionsMatchingTopScore = scoredMeals.filter((current) => current.score === topScore);
 
   if (optionsMatchingTopScore.length > 0) {
-    return optionsMatchingTopScore[getRandomInt(optionsMatchingTopScore.length)];
+    return optionsMatchingTopScore[getRandomInt(optionsMatchingTopScore.length)].toMealOption();
   }
 
   return previousMeals[0].meal;
